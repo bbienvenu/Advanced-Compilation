@@ -170,6 +170,6 @@ def asm_p(P):
         return moule
 
 
-a = tatsu.parse(nanoc_gr, "main(x, y, z){x = y ; return(z+1);}", semantics=Semantics())
-#print(a)
+a = tatsu.parse(nanoc_gr, "main(x, y, z){x = 1 ; return(140);}", semantics=Semantics())
+print(a)
 print(asm_p(a))

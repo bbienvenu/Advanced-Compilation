@@ -2,6 +2,7 @@ extern printf, atoi
 global main
 section .data
 fmt: db "%d", 10, 0
+CONST_DECL
 VAR_DECL
 
 section .text
@@ -17,11 +18,5 @@ BODY
 
 RETURN
 
-    mov rdi, fmt
-    mov rsi, rax
-    xor rax, rax
-    call printf
-    add rsp, 16
-    pop rbp
-    ret
+    AFFICHAGE_RETOUR
 

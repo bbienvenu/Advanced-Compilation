@@ -217,7 +217,7 @@ def type_expr(e, liste_variables):
     if e["type"] == 'nb':
         if isinstance(e["val"], int):
             return "int"
-        return float
+        return "float"
     elif e["type"] == 'var':
         for variable in liste_variables:
             if variable[1] == e["val"]:  # si notre variable est dans la liste des variables, on retourne son type
@@ -386,8 +386,8 @@ call printf
     elif c["type"] == "declaration":
         return asm_e(c["val"], liste_variables)
     else:
-        if type_variable(liste_variables, c["val"][0]) == type_expr(c["val"][1], liste_variables):
-            if type_variable(liste_variables, c["val"][0]) == "int":
+        if type_variable(liste_variables, c["val"][0]["val"]) == type_expr(c["val"][1], liste_variables):
+            if type_variable(liste_variables, c["val"][0]["val"]) == "int":
                 res = asm_e(c["val"][1], liste_variables)
                 res += "mov [%s], rax\n" % (c["val"][0]["val"])
                 return res
@@ -396,7 +396,7 @@ call printf
                 res += "movsd [%s], xmm0\n" % (c["val"][0]["val"])
                 return res
         else:
-            if type_variable(liste_variables, c["val"][0]) == "int":
+            if type_variable(liste_variables, c["val"][0]["val"]) == "int":
                 res = asm_e(c["val"][1], liste_variables)
                 res += "xor rax, rax\n"
                 res += "cvttsd2si rax, xmm0\n"
@@ -414,7 +414,7 @@ call printf
 def asm_p(P):
     liste_constantes = const_p(P)
     liste_variables = var_p(P)
-    with open("moule.asm") as f:
+    with open("exp_moule.asm") as f:
         moule = f.read()
         moule = moule.replace("RETURN", asm_e(P["val"][3], liste_variables))
         moule = moule.replace("BODY", asm_c(P["val"][2], liste_variables))
@@ -422,6 +422,28 @@ def asm_p(P):
         moule = moule.replace("CONST_DECL", "\n".join(C))
         D = ["%s: dq 0" % X[1] for X in liste_variables]  # X est un tuple (type, variable)
         moule = moule.replace("VAR_DECL", "\n".join(D))
+        if type_expr(P["val"][3], liste_variables) == "int":
+            retour = """
+mov rdi, fmt
+mov rsi, rax
+xor rax, rax
+call printf
+add rsp, 16
+pop rbp
+ret
+"""
+            moule = moule.replace("AFFICHAGE_RETOUR", retour)
+        else:
+            retour = """
+mov rdi, fmt
+movq rsi, xmm0
+pxor xmm0, xmm0
+call printf
+add rsp, 16
+pop rbp
+ret
+"""
+            moule = moule.replace("AFFICHAGE_RETOUR", retour)
         init = ""
         for i in range(len(P["val"][1]["val"])):
             init += "mov rbx, [rbp-16]\n"
@@ -434,8 +456,8 @@ def asm_p(P):
 
 a = tatsu.parse(nanoc_gr, """
 int main(){
-float x = 3.14;
-float y = 3.1;
+float x = 3.144;
+float y = 1.0;
 float z = x + y;
 return(z);
 }
