@@ -48,7 +48,7 @@ op2 = '+' | '-' | '*' | '<' ;
 
 class Semantics:
     def nombre(self, ast):
-        if len(ast)>1:
+        if len(ast)>1 and isinstance(ast, tuple):
             return {'type' : 'nb', 'val' : float("%s.%s" % (ast[0], ast[2]))}
         return {'type' : 'nb', 'val' : int(ast)}
 
@@ -215,7 +215,9 @@ def const_p(P): #sort la liste des constantes de type float pour le programme P
 # Determine le type d'une expression
 def type_expr(e, liste_variables):
     if e["type"] == 'nb':
-        return str(type(e["val"]))
+        if isinstance(e["val"], int):
+            return "int"
+        return float
     elif e["type"] == 'var':
         for variable in liste_variables:
             if variable[1] == e["val"]:  # si notre variable est dans la liste des variables, on retourne son type
@@ -257,50 +259,32 @@ def asm_e(e, liste_variables):
             res += "pop rbx\n"
             res += "%s rax, rbx\n" % asm_op[e["op"]][0]
             return res
-        else:
+        else:  # on ne peut operer que sur 2 termes a la fois
             type_expr_gauche = type_expr(e["val"][0], liste_variables)
             type_expr_droite = type_expr(e["val"][1], liste_variables)
             if type_expr_gauche == type_expr_droite:
                 res = asm_e(e["val"][1], liste_variables)
-                # push xmm0
-                res += "sub esp, 16\n"
-                res += "movdqu dq [esp], xmm0\n"
-                
+                # a modifier ici
+                res += "movsd xmm1, xmm0\n"
                 res += asm_e(e["val"][0], liste_variables)
-                #pop xmm1
-                res += "movdqu xmm1, dq [esp]\n"
-                res += "add esp, 16\n"
-
                 res += "%s xmm0, xmm1\n" % asm_op[e["op"]][1]
                 return res
             elif type_expr_gauche == "float":
                 res = asm_e(e["val"][1], liste_variables) 
                 res += "pxor xmm0, xmm0\n"
                 res += "cvtsi2sd xmm0, rax\n"
-                #push xmm0
-                res += "sub esp, 16\n"
-                res += "movdqu dq [esp], xmm0\n"
-
+                # a modifier ici
+                res += "movsd xmm1, xmm0\n"
                 res += asm_e(e["val"][0], liste_variables)
-                #pop xmm1
-                res += "movdqu xmm1, dq [esp]\n"
-                res += "add esp, 16\n"
-
                 res += "%s xmm0, xmm1\n" % asm_op[e["op"]][1]
                 return res
             else:
                 res = asm_e(e["val"][1], liste_variables)
-                #push xmm0
-                res += "sub esp, 16\n"
-                res += "movdqu dq [esp], xmm0\n"
-
+                # a modifier ici
+                res += "movsd xmm1, xmm0\n"
                 res += asm_e(e["val"][0], liste_variables)
                 res += "pxor xmm0, xmm0\n"
                 res += "cvtsi2sd xmm0, rax\n"
-                #pop xmm1
-                res += "movdqu xmm1, dq [esp]\n"
-                res += "add esp, 16\n"
-
                 res += "%s xmm0, xmm1\n" % asm_op[e["op"]][1]
                 return res
     if e["type"] == "cast":
@@ -331,8 +315,8 @@ call printf
 """ % asm_e(c["val"], liste_variables)
         else:
             return """%s 
-mov rsi, xmm0
-xor xmm0, xmm0
+movq rsi, xmm0
+pxor xmm0, xmm0
 mov rdi, fmt
 call printf
 """ % asm_e(c["val"], liste_variables)
@@ -451,18 +435,13 @@ def asm_p(P):
 a = tatsu.parse(nanoc_gr, """
 int main(){
 float x = 3.14;
-float  y = 3.1;
+float y = 3.1;
 float z = x + y;
-int a = 3;
-int  b = 3;
-int c = a + b;
-print(x);
-float theta = y+b;
-return (0);
+return(z);
 }
 """, semantics=Semantics())
 
 #print(a)
-#print(const_p(a))
+#print(var_p(a))
 #print(pp(a))
 print(asm_p(a))
