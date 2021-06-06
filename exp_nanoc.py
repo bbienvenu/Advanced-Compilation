@@ -438,13 +438,16 @@ def asm_p(P):
     liste_constantes = const_p(P)
     # On récupère la liste des variables et leurs types (dans un set())
     liste_variables = var_p(P)
+    # On vérifie que le type de retour correspond bien au type déclaré de la fonction main
     assert P["val"][0] == type_expr(P["val"][3], liste_variables), "Le type de retour ne correspond pas au type déclaré de la fonction."
     with open("exp_moule.asm") as f:
         moule = f.read()
         moule = moule.replace("RETURN", asm_e(P["val"][3], liste_variables))
         moule = moule.replace("BODY", asm_c(P["val"][2], liste_variables))
+        # Déclaration des constantes
         C = ["float_%s_%s : dq %s" % (str(X).split(".")[0],str(X).split(".")[1], float.hex(X)) for X in liste_constantes]
         moule = moule.replace("CONST_DECL", "\n".join(C))
+        # Déclaration des variables
         D = ["%s: dq 0" % X[1] for X in liste_variables]  # X est un tuple avec la forme : (type, variable)
         moule = moule.replace("VAR_DECL", "\n".join(D))
         if type_expr(P["val"][3], liste_variables) == "int":
@@ -468,6 +471,7 @@ pop rbp
 ret
 """
             moule = moule.replace("AFFICHAGE_RETOUR", retour)
+        # Initialisation des variables du programme
         init = ""
         for i in range(len(P["val"][1]["val"])):
             init += "mov rbx, [rbp-16]\n"
