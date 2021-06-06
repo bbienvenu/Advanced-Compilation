@@ -461,9 +461,7 @@ int main(){
 float x = 3.144;
 float y = 1.0;
 float z = 3.14;
-if (x){
-    z = x + y;
-}
+z = x + y;
 return(z);
 }
 """, semantics=Semantics())
