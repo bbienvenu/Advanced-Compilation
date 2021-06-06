@@ -315,9 +315,10 @@ call printf
 """ % asm_e(c["val"], liste_variables)
         else:
             return """%s 
-movq rsi, xmm0
-pxor xmm0, xmm0
-mov rdi, fmt
+;movq rsi, xmm0
+;pxor xmm0, xmm0
+mov rax, 1
+mov rdi, fmt_f
 call printf
 """ % asm_e(c["val"], liste_variables)
     elif c["type"] == "if":
@@ -437,9 +438,10 @@ ret
             moule = moule.replace("AFFICHAGE_RETOUR", retour)
         else:
             retour = """
-mov rdi, fmt
-movq rsi, xmm0
-pxor xmm0, xmm0
+mov rdi, fmt_f
+;movq rsi, xmm0
+;pxor xmm0, xmm0
+mov rax, 1
 call printf
 add rsp, 16
 pop rbp
@@ -457,11 +459,10 @@ ret
 
 
 a = tatsu.parse(nanoc_gr, """
-int main(){
+float main(){
 float x = 3.144;
 float y = 1.0;
 float z = 3.14;
-z = x + y;
 return(z);
 }
 """, semantics=Semantics())
