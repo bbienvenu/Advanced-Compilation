@@ -331,7 +331,8 @@ call printf
             return res
         else:
             res = asm_e(c["val"][0], liste_variables)
-            res += "cmp xmm0, 0\njz end%s\n" % cpt
+            res += "pxor xmm1, xmm1\n"
+            res += "ucomisd xmm0, xmm1\njz end%s\n" % cpt
             x = cpt
             cpt+= 1
             res += asm_c(c["val"][1], liste_variables)
@@ -352,7 +353,8 @@ call printf
             res = "start%s: %s" % (cpt, asm_e(c["val"][0], liste_variables))
             y = cpt
             cpt += 1
-            res += "cmp xmm0, 0\njz end%s\n" % cpt
+            res += "pxor xmm1, xmm1\n"
+            res += "ucomisd xmm0, xmm1\njz end%s\n" % cpt
             x = cpt
             cpt+= 1
             res += asm_c(c["val"][1], liste_variables)
@@ -458,7 +460,10 @@ a = tatsu.parse(nanoc_gr, """
 int main(){
 float x = 3.144;
 float y = 1.0;
-float z = x + y;
+float z = 3.14;
+if (x){
+    z = x + y;
+}
 return(z);
 }
 """, semantics=Semantics())
