@@ -448,16 +448,18 @@ ret
         for i in range(len(P["val"][1]["val"])):
             init += "mov rbx, [rbp-16]\n"
             init += "mov rdi, [rbx+%s]\n" % (8*(i+1))
-            init += "call atoi\n"
-            init += "mov [%s], rax\n" % P["val"][1]['val'][i][1]["val"]
+            if type_variable(liste_variables, P["val"][1]['val'][i][1]["val"]) == "int":
+                init += "call atoi\n"
+                init += "mov [%s], rax\n" % P["val"][1]['val'][i][1]["val"]
+            else:
+                init += "call atof\n"
+                init += "movsd [%s], xmm0\n" % P["val"][1]['val'][i][1]["val"]
         moule = moule.replace("VAR_INIT", init)
         return moule
 
 
 a = tatsu.parse(nanoc_gr, """
-float main(){
-float x = 3.14;
-float y = 1.0;
+int main(float x, int y){
 float z = (int) x + y;
 return(z);
 }
