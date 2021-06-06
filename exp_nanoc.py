@@ -288,7 +288,7 @@ def asm_e(e, liste_variables):
                 res += "%s xmm0, xmm1\n" % asm_op[e["op"]][1]
                 return res
     if e["type"] == "cast":
-        if e["typage"] == type_expr(e, liste_variables):
+        if e["typage"] == type_expr(e["val"], liste_variables):
             return asm_e(e["val"], liste_variables)
         else:
             if e["typage"] == "float":
@@ -315,8 +315,6 @@ call printf
 """ % asm_e(c["val"], liste_variables)
         else:
             return """%s 
-;movq rsi, xmm0
-;pxor xmm0, xmm0
 mov rax, 1
 mov rdi, fmt_f
 call printf
@@ -439,8 +437,6 @@ ret
         else:
             retour = """
 mov rdi, fmt_f
-;movq rsi, xmm0
-;pxor xmm0, xmm0
 mov rax, 1
 call printf
 add rsp, 16
@@ -460,9 +456,9 @@ ret
 
 a = tatsu.parse(nanoc_gr, """
 float main(){
-float x = 3.144;
+float x = 3.14;
 float y = 1.0;
-float z = 3.14;
+float z = (int) x + y;
 return(z);
 }
 """, semantics=Semantics())
