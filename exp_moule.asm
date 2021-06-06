@@ -1,7 +1,8 @@
-extern printf, atoi
+extern printf, atoi, atof
 global main
 section .data
 fmt: db "%d", 10, 0
+fmt_f: db "%f", 10, 0
 CONST_DECL
 VAR_DECL
 

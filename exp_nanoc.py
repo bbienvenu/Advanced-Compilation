@@ -415,6 +415,7 @@ call printf
 def asm_p(P):
     liste_constantes = const_p(P)
     liste_variables = var_p(P)
+    assert P["val"][0] == type_expr(P["val"][3], liste_variables), "\nLe type de retour ne correspond pas au type déclaré de la fonction.\n"
     with open("exp_moule.asm") as f:
         moule = f.read()
         moule = moule.replace("RETURN", asm_e(P["val"][3], liste_variables))
@@ -459,8 +460,8 @@ ret
 
 
 a = tatsu.parse(nanoc_gr, """
-int main(float x, int y){
-float z = (int) x + y;
+float main(float x, int y){
+float z = x + y;
 return(z);
 }
 """, semantics=Semantics())
