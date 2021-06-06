@@ -10,6 +10,7 @@
 
 # PROBLÈMES :
 # - Problème de priorité si on applique des opérateurs différents dans un même calcul. Exempple : int z = 3 - 2 + 1 renvoie 0 au lieu de 2
+# - Pas de division
 
 
 import tatsu 
