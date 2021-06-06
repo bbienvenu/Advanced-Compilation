@@ -8,6 +8,9 @@
 # Auteur : Bienvenu Bambi
 #-------------------------------------------------------------------- #
 
+# PROBLÈMES :
+# - Problème de priorité si on applique des opérateurs différents dans un même calcul. Exempple : int z = 3 - 2 + 1 renvoie 0 au lieu de 2
+
 
 import tatsu 
 
@@ -493,11 +496,5 @@ return(z);
 }
 """, semantics=Semantics())
 
-#print(a)
-#print(var_p(a))
 #print(pp(a))
 print(asm_p(a))
-
-# PROBLÈMES :
-# - Problème de priorité si on applique des opérateurs différents dans un même calcul. Exempple : int z = 3 - 2 + 1 renvoie 0 au lieu de 2
-# -
