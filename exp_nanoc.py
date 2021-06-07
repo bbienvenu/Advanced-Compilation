@@ -9,7 +9,7 @@
 #-------------------------------------------------------------------- #
 
 # PROBLÈMES :
-# - Problème de priorité si on applique des opérateurs différents dans un même calcul. Exempple : int z = 3 - 2 + 1 renvoie 0 au lieu de 2
+# - Problème de priorité si on applique des opérateurs différents dans un même calcul. Exemple : int z = 3 - 2 + 1 renvoie 0 au lieu de 2
 # - Pas de division
 
 
@@ -245,7 +245,7 @@ def type_variable(liste_variables, variable):
     return "float"  # on attribue un type par défaut à notre variable si elle n'apparait pas dans la liste des variables (ici on choisit float arbitrairement). Cas normalement impossible
 
 
-asm_op = {"+" : ["add", "addsd"], "-" : ["sub", "subsd"], "*" : ["mul", "mulsd"], "/" : ["div", "divsd"]}
+asm_op = {"+" : ["add", "addsd"], "-" : ["sub", "subsd"], "*" : ["mul", "mulsd"]}
 def asm_e(e, liste_variables):
     if e['type'] == 'var':
         if type_variable(liste_variables, e["val"]) == "int":
@@ -492,7 +492,7 @@ ret
 
 a = tatsu.parse(nanoc_gr, """
 int main(float x, int y){
-float a;
+float a = 3.14;
 int z = 0;
 float b = (int) a + 1.0;
 if (a) {
@@ -503,5 +503,4 @@ return(z);
 }
 """, semantics=Semantics())
 
-#print(pp(a))
 print(asm_p(a))
