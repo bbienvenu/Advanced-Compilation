@@ -491,8 +491,14 @@ ret
 
 
 a = tatsu.parse(nanoc_gr, """
-float main(int x, int y){
-float z = x - y + 1;
+int main(float x, int y){
+float a;
+int z = 0;
+float b = (int) a + 1.0;
+if (a) {
+    z = x + y;
+}
+print(b);
 return(z);
 }
 """, semantics=Semantics())
