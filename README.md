@@ -1,18 +1,18 @@
 Auteur : Bienvenu Bambi - Étudiant FICM2A - Département GIMA-ISDP/Info
 
 # Advanced Compilation
-  
+
+
 ## Compilateur nanoc : gestion statique de types
   
 L’objectif du projet est d’écrire un programme implémentant la gestion statique de types pour notre compilateur nanoc. En particulier, notre implémentation doit prendre en compte la déclatation des variables (et de la fonction ```main```) ainsi que les conversions implicites et explicites des expressions avec les types ```int``` et ```float``` (en réalité ```long``` et ```double```).
 
 On rappelle que l'implémentation est faite en python et on utilise le module ```tatsu```.
 
+
 ## Fichiers et utilisation
 
-
 ### Fichiers fournis
-
 
 1. ```exp_nanoc.py``` : le fichier python dans lequel figurent toutes les fonctions utiles à la compilation (en plus de la définition de la grammaire utilisée).
 
@@ -60,13 +60,14 @@ Ainsi, il suffira de l'exécuter via la commande ```./compilateur.sh``` dans un 
 
 ### Dépendances et utilisation :
 
-#### Dépendances :
+- Utilisation :
 
-- Le module ```tatsu``` de python, qu'on peut installer avec la commande :
-```bash
-pip install tatsu
-```
-- Le package ```nasm```, qu'on peut installer sur Ubuntu 20.04 via :
+Pour compiler un programme il faut avant tout l'écrire dans le fichier ```exp_nanoc.py``` (ligne 493). Ensuite, il suffit d'exécuter ```./compilateur.sh``` pour avoir le fichier de sortie ```a.out```.
+
+- Dépendances :
+
+  - Le module ```tatsu``` de python, qu'on peut installer avec la commande : ```pip install tatsu```
+  - Le package ```nasm```, qu'on peut installer sur Ubuntu 20.04 avec les commandes :
 
 ```bash
 sudo apt-get update -y
@@ -75,9 +76,6 @@ sudo apt-get update -y
 sudo apt-get install -y nasm
 ```
 
-#### Utilisation :
-
-Pour compiler un programme il faut avant tout l'écrire dans le fichier ```exp_nanoc.py``` (ligne 493). Ensuite, il suffit d'exécuter ```./compilateur.sh``` pour avoir le fichier de sortie ```a.out```.
 
 ### Problèmes et particularités notés
 
