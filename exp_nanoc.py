@@ -490,17 +490,79 @@ ret
         return moule
 
 
-a = tatsu.parse(nanoc_gr, """
-int main(float x, int y){
-float a = 3.14;
-int z = 0;
-float b = (int) a + 1.0;
-if (a) {
-    z = x + y;
+# ------------------------------ Tests -------------------------------------------
+
+# Test 1 : priorité des opérations non implémentée
+prg1 = """
+int main(){
+    int z = 3 - 2 + 1;
+    return(z);
 }
-print(b);
-return(z);
+"""
+
+# Test 2 : le type de la fonction main ne correspond pas au type de l'expression du return
+prg2 = """
+float main(){
+    int z = 3;
+    return(z);
 }
-""", semantics=Semantics())
+"""
+
+# Test 3 : variable déclarée mais non initialisée
+prg3 = """
+float main(){
+    float z;
+    return(z);
+}
+"""
+
+# Test 4 : on manipule uniquement des int
+prg4 = """
+int main(int x){
+    int y = 1;
+    int z = 0;
+    if (x){
+        z = 43 - y;
+    }
+    return(z);
+}
+"""
+
+# Test 5 : on manipule uniquement des float
+prg5 = """
+float main(float x){
+    float y = 1.2;
+    float z = 3.14;
+    while (x){
+        z = 43.2 - y;
+        x = 0.0;
+    }
+    return(z);
+}
+"""
+
+# Test 6 : on utilise des conversions de type
+prg6 = """
+int main(){
+    int a;
+    int b = 3;
+    a = 1;
+    int c = a + b;
+    float x = 1.2;
+    float y = 3.14;
+    float z = x + y;
+    int p = a + x;
+    float q = b + y;
+    float t = (int) z + c;
+    print(c);
+    print(z);
+    print(p);
+    print(q);
+    print(t);
+    return(0);
+}
+"""
+
+a = tatsu.parse(nanoc_gr, prg5, semantics=Semantics())
 
 print(asm_p(a))

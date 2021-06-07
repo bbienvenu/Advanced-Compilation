@@ -16,7 +16,7 @@ On rappelle que l'implémentation est faite en python et on utilise le module ``
 
 1. ```exp_nanoc.py``` : le fichier python dans lequel figurent toutes les fonctions utiles à la compilation (en plus de la définition de la grammaire utilisée).
 
-Le code nanoc à compiler doit être inscrit dans ce fichier à la ligne ```493```.
+Le code nanoc à compiler doit être inscrit dans ce fichier à la ligne ```566```.
 
 Exemple :
 
@@ -62,7 +62,7 @@ Ainsi, il suffira de l'exécuter via la commande ```./compilateur.sh``` dans un 
 
 - Utilisation :
 
-Pour compiler un programme il faut avant tout l'écrire dans le fichier ```exp_nanoc.py``` (ligne 493). Ensuite, il suffit d'exécuter ```./compilateur.sh``` pour avoir le fichier de sortie ```a.out```.
+Pour compiler un programme il faut avant tout l'écrire dans le fichier ```exp_nanoc.py``` (ligne 566). Ensuite, il suffit d'exécuter ```./compilateur.sh``` pour avoir le fichier de sortie ```a.out```.
 
 - Dépendances :
 
